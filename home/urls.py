@@ -15,12 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.views.generic import TemplateView
+from rest_framework import routers
 import taxii2.views
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html')),
     url(r'^taxii/$', taxii2.views.DiscoveryView.as_view({'get': 'list'})),
     url(r'^taxii/mygroup/$', taxii2.views.ApiBase.as_view({'get': 'list'})),
-    url(r'^taxii/mygroup/channels/', taxii2.views.ChannelView.as_view({'get': 'list'})),
-    url(r'^taxii/mygroup/collections/', taxii2.views.CollectionView.as_view({'get': 'list'})),
+    url(r'^taxii/mygroup/channels/$', taxii2.views.ChannelView.as_view({'get': 'list'})),
+    url(r'^taxii/mygroup/collections/$', taxii2.views.CollectionView.as_view({'get': 'list'})),
+    url(r'^taxii/mygroup/collections/indicators/1', taxii2.views.IndicatorView.as_view({'get': 'list'})),
+    url(r'^taxii/mygroup/collections/indicators/indicator--089a6ecb-cc15-43cc-9494-767639779123', taxii2.views.IndicatorView.as_view({'get': 'list'})),
+    # url(r'^taxii/mygroup/collections/packages/1', taxii2.views.CollectionView.as_view({'get': 'list'})),
 ]

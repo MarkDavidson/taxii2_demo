@@ -23,9 +23,30 @@ class ApiBaseSerializer(serializers.Serializer):
     contact = serializers.CharField()
     logo = serializers.CharField(default='https://soltra.com/favicon.ico')
     channels = serializers.BooleanField(default=True)
-    x_channels_url = serializers.CharField(default='http://taxii2-demo.herokuapp.com/taxii/mygroup/channels/')
+    x_channels_url = serializers.CharField(default='http://taxii2-demo.soltra.com/taxii/mygroup/channels/')
     collections = serializers.BooleanField(default=True)
-    x_collections_url = serializers.CharField(default='http://taxii2-demo.herokuapp.com/taxii/mygroup/collections/')
+    x_collections_url = serializers.CharField(default='http://taxii2-demo.soltra.com/taxii/mygroup/collections/')
+
+
+class HashSerializer(serializers.Serializer):
+    type = serializers.CharField(default='md5')
+    hash_value = serializers.CharField()
+
+
+class FileObservableSerializer(serializers.Serializer):
+    type = serializers.CharField(default='file-object')
+    hashes = HashSerializer(many=True)
+    size = serializers.IntegerField()
+
+
+class IndicatorSerializer(serializers.Serializer):
+    type = serializers.CharField(default='indicator')
+    id = serializers.CharField()
+    spec_version = serializers.CharField()
+    created_at = serializers.CharField()
+    description = serializers.CharField()
+    indicator_types = serializers.ListField()
+    observables = FileObservableSerializer(many=True)
 
 
 class ChannelSerializer(serializers.ModelSerializer):
@@ -55,3 +76,4 @@ class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
         fields = ('type', 'name', 'description', 'x_info')
+
