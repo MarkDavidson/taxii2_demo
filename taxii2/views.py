@@ -5,7 +5,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from models import Channel, Collection
-from serializers import ChannelSerializer, CollectionSerializer, DiscoverySerializer
+from serializers import ChannelSerializer, CollectionSerializer, DiscoverySerializer, ApiBaseSerializer
 
 
 class DiscoveryView(viewsets.ViewSet):
@@ -14,11 +14,28 @@ class DiscoveryView(viewsets.ViewSet):
         d = DiscoverySerializer(data={
             'contact': 'mdavidson@soltra.com',
             'description': 'Worlds best TAXII2 Server',
-            'api_bases': '/taxii/mygroup/channels/ or /taxii/mygroup/collections/ (Yes this field is really wrong)'
+            'api_bases': [{'url': '/taxii/mygroup/', 'description': 'This is a TAXII API'}, ],
             })
-        d.is_valid()
+        if not d.is_valid():
+            return Response(d.errors)
         return Response(d.data)
 
+
+class ApiBase(viewsets.ViewSet):
+
+    def list(self, request):
+        d = ApiBaseSerializer(data={
+            'name': 'mygroup',
+            'description': 'Worlds best API Base',
+            'contact': 'mdavidson@soltra.com',
+            'logo': 'https://soltra.com/favicon.ico',
+            'channels': True,
+            'collections': True
+        })
+
+        if not d.is_valid():
+            return Response(d.errors)
+        return Response(d.data)
 
 class ChannelView(viewsets.ViewSet):
 
@@ -32,5 +49,6 @@ class CollectionView(viewsets.ViewSet):
 
     def list(self, request):
         collections = Collection.objects.all()
+        print len(collections)
         serializer = CollectionSerializer(collections, many=True)
         return Response(serializer.data)

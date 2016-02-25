@@ -14,13 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from django.contrib import admin
-
+from django.views.generic import TemplateView
 import taxii2.views
 
 urlpatterns = [
+    url(r'^$', TemplateView.as_view(template_name='index.html')),
     url(r'^taxii/$', taxii2.views.DiscoveryView.as_view({'get': 'list'})),
+    url(r'^taxii/mygroup/$', taxii2.views.ApiBase.as_view({'get': 'list'})),
     url(r'^taxii/mygroup/channels/', taxii2.views.ChannelView.as_view({'get': 'list'})),
-    url(r'^taxii/mygroup/collections/', taxii2.views.ChannelView.as_view({'get': 'list'})),
-    url(r'^admin/', admin.site.urls),
+    url(r'^taxii/mygroup/collections/', taxii2.views.CollectionView.as_view({'get': 'list'})),
 ]
