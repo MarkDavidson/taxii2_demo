@@ -14,7 +14,8 @@ class DiscoveryView(viewsets.ViewSet):
         d = DiscoverySerializer(data={
             'contact': 'mdavidson@soltra.com',
             'description': 'Worlds best TAXII2 Server',
-            'api_bases': [{'url': '/taxii/mygroup/', 'description': 'This is a TAXII API'}, ],
+            'api_bases': [{'url': 'http://taxii2-demo.herokuapp.com/taxii/mygroup/',
+                           'description': 'This is a TAXII API'}, ],
             })
         if not d.is_valid():
             return Response(d.errors)
